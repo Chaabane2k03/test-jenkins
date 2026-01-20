@@ -14,7 +14,7 @@ pipeline{
 		stage("build image"){
 			steps{
 				echo 'Building the Docker image'
-				withCredentials([usernamePassword(credentialsId: 'docker-auth', passwordVarianle: 'PASS', usernameVariable: 'USER')]){
+				withCredentials([usernamePassword(credentialsId: 'docker-auth', passwordVariable: 'PASS', usernameVariable: 'USER')]){
 					sh 'docker build -t chaabane2k03/calculator-app:beta .'
 					sh "echo $PASS | docker login -u $USER --password-stdin"
 					sh 'docker push chaabane2k03/calculator-app:beta'
