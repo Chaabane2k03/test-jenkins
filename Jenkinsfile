@@ -1,32 +1,30 @@
 pipeline{
 	agent any
-
-	parameters {
-		choice(name: 'VERSION', choices: ['1.1.0','1.2.0','1.3.0'], description:'')
-		booleanParam(name: 'executeTests', defaultValue: true, description: '')
+	tools {
+		maven 'maven-latest'
 	}
-
 	stages {
-		stage("build"){
+		stage("build jar"){
 			steps{
-				echo 'Building project . . .'
+				echo 'Building The application . . .'
+				sh 'mvn package'
 			}
 		}
 
-		stage("test"){
-			when {
-				expression{
-					params.executeTests
-				}
-			}
+		stage("build image"){
 			steps{
-				echo 'Running some tests . . .'
+				echo 'Building the Docker image'
+				withCredentials([usernamePassword(credentialsId: 'docker-auth', passwordVarianle: 'PASS', usernameVariable: 'USER')]){
+					sh 'docker build -t chaabane2k03/calculator-app:beta .'
+					sh "echo $PASS | docker login -u $USER --password-stdin"
+					sh 'docker push chaabane2k03/calculator-app:beta'
+				}
 			}
 		}
 
 		stage("deploy"){
 			steps{
-				echo "Deploying version ${params.VERSION} . . ."
+				echo "Deploying version . . ."
 			}
 		}
 	}
