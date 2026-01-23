@@ -1,3 +1,6 @@
+
+@Library('jenkins-shared-library')_
+
 pipeline{
 	agent any
 	tools {
@@ -6,18 +9,16 @@ pipeline{
 	stages {
 		stage("build jar"){
 			steps{
-				echo 'Building The application . . .'
-				sh 'mvn package'
+				script{
+					buildJar()
+				}
 			}
 		}
 
 		stage("build image"){
 			steps{
-				echo 'Building the Docker image'
-				withCredentials([usernamePassword(credentialsId: 'docker-auth', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-					sh 'docker build -t chaabane2k03/calculator-app:beta .'
-					sh "echo $PASS | docker login -u $USER --password-stdin"
-					sh 'docker push chaabane2k03/calculator-app:beta'
+				script{
+					buildImage()
 				}
 			}
 		}
