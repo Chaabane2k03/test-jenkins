@@ -18,7 +18,9 @@ pipeline{
 		stage("build image"){
 			steps{
 				script{
-					buildImage 'chaabane2k03/calculator-app:stable-1.0'
+					buildImage 'chaabane2k03/calculator-app:stable-1.0.1'
+					dockerLogin()
+					dockerPush 'chaabane2k03/calculator-app:stable-1.0.1'
 				}
 			}
 		}
