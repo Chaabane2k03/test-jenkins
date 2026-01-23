@@ -18,7 +18,7 @@ pipeline{
 		stage("build image"){
 			steps{
 				script{
-					buildImage()
+					buildImage 'chaabane2k03/calculator-app:stable-1.0'
 				}
 			}
 		}
